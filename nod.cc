@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <string>
 
 // ROAD_MAP DATA TYPE
 enum road_type {
@@ -21,9 +22,16 @@ struct road_comparator {
 // No big_int since custom classes aren't allowed.
 using road_map = std::map<road, unsigned long, road_comparator>;
 
+// VEHICLE MAP
+// same problem with km's
+std::map<std::string, unsigned long> vehicle_km;
+
+using line = std::pair<int, string>;
+std::unordered_map<std::string, line> driving_vehicles;
+
 int main()
 {
-    // Test tego jak działa mapa.
+    /* Test tego jak działa mapa.
     road_map x;
     x[std::make_pair(S, 1)] = 4;
     x[std::make_pair(S, 0)] = 3;
@@ -31,6 +39,7 @@ int main()
     x[std::make_pair(A, 1)] = 2;
     for (auto const& [key, val] : x)
         std::cout << val << std::endl;
+    */
 
     return 0;
 }
