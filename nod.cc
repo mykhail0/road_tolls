@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 // ROAD_MAP DATA TYPE
@@ -26,7 +27,7 @@ using road_map = std::map<road, unsigned long, road_comparator>;
 // same problem with km's
 std::map<std::string, unsigned long> vehicle_km;
 
-using line = std::pair<int, string>;
+using line = std::pair<int, std::string>;
 std::unordered_map<std::string, line> driving_vehicles;
 
 int main()
@@ -40,6 +41,10 @@ int main()
     for (auto const& [key, val] : x)
         std::cout << val << std::endl;
     */
+
+    vehicle_km["Car1"] = 100;
+
+    driving_vehicles["Car1"] = std::make_pair(1, "Car1 S1 10,0");
 
     return 0;
 }
