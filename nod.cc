@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+//#include <tuple>
 #include <string>
 
 // ROAD_MAP DATA TYPE
@@ -22,6 +23,7 @@ struct road_comparator {
 // Or unsigned long long?
 // No big_int since custom classes aren't allowed.
 using road_map = std::map<road, unsigned long, road_comparator>;
+road_map road_km;
 
 // VEHICLE MAP
 // same problem with km's
@@ -38,7 +40,7 @@ void road_tolls() {
     std::getline(std::cin, str);
 
     while (std::cin.good()) {
-        std::cout << str << std::endl;
+        // check if line has correct syntax
         std::getline(std::cin, str);
     }
 
@@ -51,8 +53,21 @@ void road_tolls() {
     }
 
     if (std::cin.eof()) {
-        // parse
+        // check if line has correct syntax
     }
+}
+
+std::tuple<std::string, std::string, unsigned long> extract(string s) {
+    // do some work
+    return {vehicle_name, road_name, km};
+}
+
+// Inserts vehicle info into vehicle maps, prints error if neede.
+// Updates road_km.
+// line l has correct syntax.
+void insert(line l) {
+    auto [vehicle_name, road_name, km] = extract(l.second);
+    // do some work
 }
 
 int main() {
