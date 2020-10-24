@@ -59,20 +59,17 @@ void road_tolls() {
     std::getline(std::cin, str);
 
     while (std::cin.good()) {
+        // \n is not stored! So need to append it to get a raw input string.
+        str += "\n";
         // check if line has correct syntax
         std::cout << is_correct_line(str) << std::endl;
         std::getline(std::cin, str);
     }
 
-    if (std::cin.fail()) {
-        // error dont parse the rest
-    }
-
-    if (std::cin.bad()) {
-        // error dont parse the rest
-    }
-
-    if (std::cin.eof()) {
+    if (std::cin.fail() || std::cin.bad())
+        std::cerr << "Error in the input\n";
+    else if (std::cin.eof()) {
+        std::cout << str << std::endl;
         // check if line has correct syntax
     }
 }

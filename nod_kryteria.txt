@@ -1,0 +1,61 @@
+= Kryteria oceniania pierwszego zadania =
+
+== Cele dydaktyczne ==
+
+Studenci powinni:
+- poznać podstawy korzystania z STL-a,
+- uświadomić sobie konieczność weryfikacji poprawności danych wejściowych,
+- nauczyć się podejmowania decyzji programistycznych,
+- ugruntować w sobie konieczność testowania programu.
+
+== Ocena automatyczna ==
+
+Jest 6 testów:
+1. test z treści zadania
+2. TODO
+3. TODO
+4. TODO
+5. TODO
+6. TODO
+
+Za każdy test, który program przejdzie poprawnie, stawiamy jeden punkt.
+Testy zostaną ujawnione dopiero po upłynięciu terminu oddania zadania.
+Testy składają się z plików *.in zawierających dane do przeczytania z cin
+oraz plików *.out i *.err zawierających oczekiwane odpowiedzi programu
+wypisywane odpowiednio na cout i cerr.
+
+== Ocena jakości kodu ==
+
+Zaczynamy od 4 punktów i odejmujemy po jednym punkcie za:
+- niezgodność zawartości repozytorium ze specyfikacją zadania;
+- ostrzeżenia wypisywane przez kompilator (opcje -Wall, -Wextra);
+- brzydki styl (niepoprawne wstawianie spacji, wcięć, odstępów, brak
+  komentarzy, magiczne stałe itd.);
+- dłubanie własnych klas, struktur lub algorytmów zamiast użycia STL-owych;
+- za rozwlekłą lub nieelegancką strukturę programu, rozpatrywanie zbyt wielu
+  warunków brzegowych, powtarzanie kodu, nieefektywne korzystanie z klasy
+  string, np. if (str != "") zamiast if (!str.empty()), trzymanie liczb jako
+  napisów i używanie komparatora w każdym porównaniu konwertującego napis na
+  liczbę itp.;
+- korzystanie z wejścia-wyjścia dostarczanego przez bibliotekę C zamiast ze
+  strumieni lub dłubanie własnego kodu zamiast użycia np. funkcji getline;
+- potencjalne wycieki pamięci albo korzystanie z new i delete;
+- bałagan w doborze typów, np. używanie int lub unsigned zamiast size_t jako
+  typu wartości zwracanej przez metody size(), length();
+- używanie typu zmiennoprzecinkowego;
+- inne znalezione i niewymienione w powyższych kryteriach błędy.
+Przy czym ocena nie może być ujemna.
+
+Dodajemy jeden punkt za skorzystanie z regex do walidowania poprawności danych
+wejściowych. Przy czym ocena nie może być wyższa niż 4 pkt.
+
+Ponadto:
+- piętnujemy przekazywanie funkcjom dużych argumentów (np. typu string) przez
+  wartość, takie obiekty przekazuje się przez stałą referencję;
+- wytykamy nieukrywanie globalnych zmiennych, struktur, funkcji przed światem
+  zewnętrznym za pomocą anonimowej przestrzeni nazw, choć studenci powinni
+  wiedzieć, że można to też osiągnąć podobnie jak w języku C, czyli deklarując
+  je jako static;
+- sugerujemy stosowanie using zamiast typedef.
+Na razie tylko wskazujemy te błędy i nie odejmujemy za nie punktów, bo są to
+zagadnienia pojawiające się w drugim zadaniu, w którym już będziemy za to karać.
