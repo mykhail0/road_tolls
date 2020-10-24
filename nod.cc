@@ -3,6 +3,7 @@
 #include <unordered_map>
 //#include <tuple>
 #include <string>
+#include <regex>
 
 // ROAD_MAP DATA TYPE
 enum road_type {
@@ -27,20 +28,39 @@ road_map road_km;
 
 // VEHICLE MAP
 // same problem with km's
-std::map<std::string, unsigned long> vehicle_km;
+std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km;
 
 using line = std::pair<int, std::string>;
 std::unordered_map<std::string, line> driving_vehicles;
 
 // INPUT
+// Important regexes.
+std::string white_space = R"([ \t\r\v\f])";
+std::string road_name = "[AS][1-9]\\d{0,2}";
+std::string car_name = "[[:alnum:]]{3,11}";
+std::string kilometer = "([1-9]\\d*|0),\\d";
+std::string vehicle_line =
+    "(" + white_space + "*" + car_name + white_space + "+" + road_name
+    + white_space + "+" + kilometer + white_space + "*)?\\n?";
+std::string request_line =
+    "(" + white_space + "*\\?" + white_space + "*(" + car_name + "|" + road_name
+    + ")?" + white_space + "*)?\\n?";
+std::string correct_line = vehicle_line + "|" + request_line;
+
+bool is_correct_line(const std::string& s) {
+    return std::regex_match(s, std::regex(correct_line));
+}
+
 // Gets line and tries to extract 1) request or 2) vehicle information.
-// Calls error handler if fails. If succeeds, passes extracted information to the engine.
+// Calls error handler if fails.
+// If succeeds, passes extracted information to the engine.
 void road_tolls() {
     std::string str;
     std::getline(std::cin, str);
 
     while (std::cin.good()) {
         // check if line has correct syntax
+        std::cout << is_correct_line(str) << std::endl;
         std::getline(std::cin, str);
     }
 
@@ -56,7 +76,7 @@ void road_tolls() {
         // check if line has correct syntax
     }
 }
-
+/*
 std::tuple<std::string, std::string, unsigned long> extract(string s) {
     // do some work
     return {vehicle_name, road_name, km};
@@ -69,6 +89,7 @@ void insert(line l) {
     auto [vehicle_name, road_name, km] = extract(l.second);
     // do some work
 }
+*/
 
 int main() {
     /* Test tego jak działa mapa.
