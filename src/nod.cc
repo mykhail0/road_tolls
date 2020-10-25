@@ -95,7 +95,8 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
     assert(!road_match.empty());
     assert(!km_match.empty());
 
-    return {vehicle_match[0], str_to_road(road_match[0]), std::stoul(remove_comma(km_match[0]))};
+    return {vehicle_match[0], str_to_road(road_match[0]),
+            std::stoul(remove_comma(km_match[0]))};
 }
 
 void general_request() {
@@ -143,6 +144,7 @@ void handle(const line& l) {
 
 // Prints errors of vehicles still being on roads.
 void print_errors() {
+    // TODO
 }
 
 // Gets line and tries to extract 1) request or 2) vehicle information.
@@ -159,6 +161,8 @@ void road_tolls() {
         if (is_correct_line(str))
             // will the str stay?
             handle(std::make_pair(line_count, str));
+        else
+            std::cerr << "Error in line " << line_count << ": " << str;
         std::getline(std::cin, str);
         ++line_count;
     }
@@ -168,6 +172,8 @@ void road_tolls() {
     else if (std::cin.eof()) {
         if (is_correct_line(str))
             handle(std::make_pair(line_count, str));
+        else
+            std::cerr << "Error in line " << line_count << ": " << str << std::endl;
     }
 
     print_errors();
