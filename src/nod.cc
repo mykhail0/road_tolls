@@ -101,19 +101,50 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
             std::stoul(remove_comma(km_match[0]))};
 }
 
+void print_vehicle(const std::string& v) {
+	std::pair<unsigned long, unsigned long> km = vehicle_km[v];
+    std::cout << v;
+    if (km.first != 0) {
+        std::cout << " A " << (km.first - 1) / 10 << "," << (km.first - 1) % 10;
+    }
+    if (km.second != 0) {
+        std::cout << " S " << (km.second - 1) / 10 << "," << (km.second - 1) % 10;
+    }
+    std::cout << std::endl;
+}
+
+void print_road(road r) {
+	if (r.first == A) {
+		std::cout << "A";
+	} else {
+		std::cout << "S";
+	}
+	std::cout << r.second << " " << road_km[r] / 10 << "," << road_km[r] % 10 << std::endl;
+}
+
 // Handles "?" request.
 void general_request() {
-    // TODO
+    for (auto e : vehicle_km)
+        print_vehicle(e.first);
+        
+    for (auto e : road_km)
+        print_road(e.first);
+
 }
 
 // Handles "?VEHICLE" request.
 void vehicle_request(const std::string& v) {
-    // TODO
+    std::cout << "vehicle_request" << std::endl;
+    if(vehicle_km.find(v) != vehicle_km.end()) {
+        print_vehicle(v);
+    }
 }
 
 // Handles "?ROAD" request.
 void road_request(road r) {
-    // TODO
+    if(road_km.find(r) != road_km.end()) {
+    	print_road(r);
+    }
 }
 
 // Handles requests.
