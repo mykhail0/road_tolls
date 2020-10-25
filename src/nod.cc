@@ -15,9 +15,9 @@ using road = std::pair<road_type, int>;
 
 struct road_comparator {
     bool operator()(const road& a, const road& b) const {
-        if (a.first == b.first)
-            return a < b;
-        return a.first < b.first;
+        if (a.second == b.second)
+            return a.first < b.first;
+        return a.second < b.second;
     }
 };
 
@@ -84,7 +84,6 @@ road str_to_road(const std::string& s) {
 // Extracts vehicle name, road name (as needed for a key in a road_map)
 // and kilometers.
 std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
-    std::cout << s;
     std::smatch vehicle_match;
     std::smatch road_match;
     std::smatch km_match;
