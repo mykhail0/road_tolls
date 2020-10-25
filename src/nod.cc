@@ -195,9 +195,19 @@ void handle(const line& l) {
         insert(l);
 }
 
-// Prints errors of vehicles still being on roads.
-void print_errors() {
-    // TODO
+// temporary testing function
+void print_maps() {
+    std::cout << "Road kilometers\n";
+    for (auto e : road_km)
+        std::cout << e.first.first << " " << e.first.second << " " << e.second << std::endl;
+
+    std::cout << "vehicle kms\n";
+    for (auto e : vehicle_km)
+        std::cout << e.first << " " << e.second.first << " " << e.second.second << std::endl;
+
+    std::cout << "driving vehicles\n";
+    for (auto e : driving_vehicles)
+        std::cout << e.first << " " << e.second.first << " " << e.second.second;
 }
 
 // Gets line and tries to extract 1) request or 2) vehicle information.
@@ -230,7 +240,8 @@ void road_tolls() {
                       << std::endl;
     }
 
-    print_errors();
+    //testing
+    print_maps();
 }
 
 int main() {
