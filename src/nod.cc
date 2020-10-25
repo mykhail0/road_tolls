@@ -21,14 +21,10 @@ struct road_comparator {
     }
 };
 
-// Don't know if unsigned long is enough. Maybe long long?
-// Or unsigned long long?
-// No big_int since custom classes aren't allowed.
 using road_map = std::map<road, unsigned long, road_comparator>;
 static road_map road_km;
 
 // VEHICLE MAP
-// same problem with km's
 static std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km;
 
 using line = std::pair<int, std::string>;
@@ -48,14 +44,17 @@ static std::string request_line = white_space + "*\\?" + white_space + "*" +
 static std::string correct_line = "(" + vehicle_line + "|" + request_line
                                   + ")|\\n";
 
+// Checks if an inputted line is a request line.
 bool is_request(const std::string& s) {
     return std::regex_match(s, std::regex(request_line));
 }
 
+// Checks if an inputted line is correct.
 bool is_correct_line(const std::string& s) {
     return std::regex_match(s, std::regex(correct_line));
 }
 
+// Extracts a road string or a vehicle string from an inputted line.
 // if the request is "?" then returned string is empty.
 std::string extract_request_data(const std::string& s) {
     std::smatch m;
@@ -65,11 +64,13 @@ std::string extract_request_data(const std::string& s) {
     return "";
 }
 
+// Removes the first comma from a string.
 std::string remove_comma(const std::string& s) {
     std::string ans = std::string(s);
     return ans.erase(ans.find(','), 1);
 }
 
+// Converts a string to the road type.
 road str_to_road(const std::string& s) {
     road_type t;
     int number = std::stoi(s.substr(1));
@@ -80,6 +81,8 @@ road str_to_road(const std::string& s) {
     return std::make_pair(t, number);
 }
 
+// Extracts vehicle name, road name (as needed for a key in a road_map)
+// and kilometers.
 std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
     std::cout << s;
     std::smatch vehicle_match;
@@ -99,14 +102,17 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
             std::stoul(remove_comma(km_match[0]))};
 }
 
+// Handles "?" request.
 void general_request() {
     // TODO
 }
 
+// Handles "?VEHICLE" request.
 void vehicle_request(const std::string& v) {
     // TODO
 }
 
+// Handles "?ROAD" request.
 void road_request(road r) {
     // TODO
 }
@@ -173,7 +179,8 @@ void road_tolls() {
         if (is_correct_line(str))
             handle(std::make_pair(line_count, str));
         else
-            std::cerr << "Error in line " << line_count << ": " << str << std::endl;
+            std::cerr << "Error in line " << line_count << ": " << str
+                      << std::endl;
     }
 
     print_errors();
