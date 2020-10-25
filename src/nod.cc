@@ -130,12 +130,60 @@ void request(const std::string& s) {
     }
 }
 
-// Inserts vehicle info into vehicle maps, prints error if needed.
+void print_error(const line& l) {
+    std::cerr << "Error in line " << l.first << ": " << l.second;
+}
+
+void increase_road_km(const road r, const unsigned long km) {
+    if (road_km.find(r) != road_km.end()) {
+        auto km_to_add = road_km[r] + km;
+        road_km.at(r) = km_to_add;
+    } else {
+        road_km[r] = km;
+    }
+}
+
+void increase_vehicle_km(const std::string vehicle_name, const unsigned long km, const road_type type) {
+    if (vehicle_km.find(vehicle_name) == vehicle_km.end()) {
+        vehicle_km[vehicle_name] = std::make_pair(0,0);
+    }
+    auto km_to_add = vehicle_km[vehicle_name];
+    if (type == A) {
+        if (km_to_add.first == 0) {
+            km_to_add.first++;
+        }
+        km_to_add.first += km;
+    } else {
+        if (km_to_add.second == 0) {
+            km_to_add.second++;
+        }
+        km_to_add.second += km;
+    }
+    vehicle_km.at(vehicle_name) = km_to_add;
+    
+}
+
+// Inserts vehicle info into vehicle maps, prints error if neede.
 // Updates road_km.
 // line l has correct syntax.
 void insert(const line& l) {
-    auto [v, r, km] = extract_vehicle_data(l.second);
-    // TODO
+    auto [vehicle_name, r, km] = extract_vehicle_data(l.second);
+    if (driving_vehicles.find(vehicle_name) != driving_vehicles.end()) {
+        auto l2 = driving_vehicles[vehicle_name];
+        auto [vehicle_name, r2, km2] = extract_vehicle_data(l2.second);
+        if (r == r2) {
+            increase_road_km(r, abs(km - km2));
+            increase_vehicle_km(vehicle_name, abs(km - km2), r.first);
+            driving_vehicles.erase(vehicle_name);
+
+        } else {
+            print_error(driving_vehicles[vehicle_name]);
+            driving_vehicles.at(vehicle_name) = l;
+        }
+
+    } else {
+        driving_vehicles[vehicle_name] = l;
+    }
 }
 
 // Handles a line.
