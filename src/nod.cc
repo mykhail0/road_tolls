@@ -11,7 +11,7 @@ enum road_type {
     A, S
 };
 
-using road = std::pair<road_type, short>;
+using road = std::pair<road_type, int>;
 
 struct road_comparator {
     bool operator()(const road& a, const road& b) const {
@@ -70,7 +70,17 @@ std::string remove_comma(const std::string& s) {
     return ans.erase(ans.find(','), 1);
 }
 
-std::tuple<std::string, std::string, unsigned long> extract_vehicle_data(const std::string& s) {
+road str_to_road(const std::string& s) {
+    road_type t;
+    int number = std::stoi(s.substr(1));
+    if (s[0] == 'A')
+        t = A;
+    else
+        t = S;
+    return std::make_pair(t, number);
+}
+
+std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
     std::cout << s;
     std::smatch vehicle_match;
     std::smatch road_match;
@@ -85,21 +95,40 @@ std::tuple<std::string, std::string, unsigned long> extract_vehicle_data(const s
     assert(!road_match.empty());
     assert(!km_match.empty());
 
-    return {vehicle_match[0], road_match[0], std::stoul(remove_comma(km_match[0]))};
+    return {vehicle_match[0], str_to_road(road_match[0]), std::stoul(remove_comma(km_match[0]))};
+}
+
+void general_request() {
+    // TODO
+}
+
+void vehicle_request(const std::string& v) {
+    // TODO
+}
+
+void road_request(road r) {
+    // TODO
 }
 
 // Handles requests.
 void request(const std::string& s) {
-    std::cout << "performing a request for " << s << std::endl;
-    std::cout << "extracted data: " << extract_request_data(s) << std::endl;
+    std::string vehicle_or_road = extract_request_data(s);
+    if (vehicle_or_road.empty()) {
+        general_request();
+    } else {
+        if (std::regex_match(s, std::regex(vehicle_name)))
+            vehicle_request(vehicle_or_road);
+        if (std::regex_match(s, std::regex(road_name)))
+            road_request(str_to_road(vehicle_or_road));
+    }
 }
 
-// Inserts vehicle info into vehicle maps, prints error if neede.
+// Inserts vehicle info into vehicle maps, prints error if needed.
 // Updates road_km.
 // line l has correct syntax.
 void insert(const line& l) {
-    auto [vehicle_name, road_name, km] = extract_vehicle_data(l.second);
-    std::cout << "extracted vehicle: " << vehicle_name << " " << road_name << " " << km << std::endl;
+    auto [v, r, km] = extract_vehicle_data(l.second);
+    // TODO
 }
 
 // Handles a line.
@@ -112,6 +141,7 @@ void handle(const line& l) {
         insert(l);
 }
 
+// Prints errors of vehicles still being on roads.
 void print_errors() {
 }
 
