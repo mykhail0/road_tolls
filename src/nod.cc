@@ -193,6 +193,14 @@ void increase_vehicle_km(const std::string vehicle, const unsigned long km, cons
     
 }
 
+unsigned long distance(unsigned long km, unsigned long km2) {
+	if (km > km2) {
+		return km - km2;
+	} else {
+		return km2 - km;
+	}
+}
+
 // Inserts vehicle info into vehicle maps, prints error if neede.
 // Updates road_km.
 // line l has correct syntax.
@@ -201,9 +209,10 @@ void insert(const line& l) {
     if (driving_vehicles.find(v) != driving_vehicles.end()) {
         auto l2 = driving_vehicles[v];
         auto [v2, r2, km2] = extract_vehicle_data(l2.second);
+        assert(v == v2);
         if (r == r2) {
-            increase_road_km(r, abs(km - km2));
-            increase_vehicle_km(v, abs(km - km2), r.first);
+            increase_road_km(r, distance(km, km2));
+            increase_vehicle_km(v, distance(km, km2), r.first);
             driving_vehicles.erase(v);
 
         } else {
