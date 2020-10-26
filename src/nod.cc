@@ -101,6 +101,7 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
             std::stoul(remove_comma(km_match[0]))};
 }
 
+//
 void print_vehicle(const std::string& v) {
 	std::pair<unsigned long, unsigned long> km = vehicle_km[v];
     std::cout << v;
@@ -134,7 +135,6 @@ void general_request() {
 
 // Handles "?VEHICLE" request.
 void vehicle_request(const std::string& v) {
-    std::cout << "vehicle_request" << std::endl;
     if(vehicle_km.find(v) != vehicle_km.end()) {
         print_vehicle(v);
     }
@@ -270,9 +270,6 @@ void road_tolls() {
             std::cerr << "Error in line " << line_count << ": " << str
                       << std::endl;
     }
-
-    //testing
-    print_maps();
 }
 
 int main() {
