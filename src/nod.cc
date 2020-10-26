@@ -153,9 +153,9 @@ void request(const std::string& s) {
     if (vehicle_or_road.empty()) {
         general_request();
     } else {
-        if (std::regex_match(s, std::regex(vehicle_name)))
+        if (std::regex_match(vehicle_or_road, std::regex(vehicle_name)))
             vehicle_request(vehicle_or_road);
-        if (std::regex_match(s, std::regex(road_name)))
+        if (std::regex_match(vehicle_or_road, std::regex(road_name)))
             road_request(str_to_road(vehicle_or_road));
     }
 }
