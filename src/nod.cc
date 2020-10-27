@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <regex>
 
-//#define NDEBUG
+#define NDEBUG
 
 // ROAD_MAP DATA TYPE
 enum road_type {
@@ -103,24 +103,22 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
 
 //
 void print_vehicle(const std::string& v) {
-	std::pair<unsigned long, unsigned long> km = vehicle_km[v];
+    std::pair<unsigned long, unsigned long> km = vehicle_km[v];
     std::cout << v;
-    if (km.first != 0) {
+    if (km.first != 0)
         std::cout << " A " << (km.first - 1) / 10 << "," << (km.first - 1) % 10;
-    }
-    if (km.second != 0) {
+
+    if (km.second != 0)
         std::cout << " S " << (km.second - 1) / 10 << "," << (km.second - 1) % 10;
-    }
     std::cout << std::endl;
 }
 
 void print_road(road r) {
-	if (r.first == A) {
-		std::cout << "A";
-	} else {
-		std::cout << "S";
-	}
-	std::cout << r.second << " " << road_km[r] / 10 << "," << road_km[r] % 10 << std::endl;
+    if (r.first == A)
+	std::cout << "A";
+    else
+	std::cout << "S";
+    std::cout << r.second << " " << road_km[r] / 10 << "," << road_km[r] % 10 << std::endl;
 }
 
 // Handles "?" request.
@@ -194,11 +192,7 @@ void increase_vehicle_km(const std::string vehicle, const unsigned long km, cons
 }
 
 unsigned long distance(unsigned long km, unsigned long km2) {
-	if (km > km2) {
-		return km - km2;
-	} else {
-		return km2 - km;
-	}
+    return km > km2 ? km - km2 : km2 - km;
 }
 
 // Inserts vehicle info into vehicle maps, prints error if neede.
@@ -235,38 +229,20 @@ void handle(const line& l) {
         insert(l);
 }
 
-// temporary testing function
-void print_maps() {
-    std::cout << "Road kilometers\n";
-    for (auto e : road_km)
-        std::cout << e.first.first << " " << e.first.second << " " << e.second << std::endl;
-
-    std::cout << "vehicle kms\n";
-    for (auto e : vehicle_km)
-        std::cout << e.first << " " << e.second.first << " " << e.second.second << std::endl;
-
-    std::cout << "driving vehicles\n";
-    for (auto e : driving_vehicles)
-        std::cout << e.first << " " << e.second.first << " " << e.second.second;
-}
-
 // Gets line and tries to extract 1) request or 2) vehicle information.
 // Calls error handler if fails.
 // If succeeds, passes extracted information to the engine.
 void road_tolls() {
     int line_count = 1;
     std::string str;
-    std::getline(std::cin, str);
 
-    while (std::cin.good()) {
+    while (std::getline(std::cin, str) {
         // \n is not stored! So need to append it to get a raw input string.
         str += "\n";
         if (is_correct_line(str))
-            // will the str stay?
             handle(std::make_pair(line_count, str));
         else
             std::cerr << "Error in line " << line_count << ": " << str;
-        std::getline(std::cin, str);
         ++line_count;
     }
 
