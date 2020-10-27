@@ -22,12 +22,15 @@ struct road_comparator {
 };
 
 using road_map = std::map<road, unsigned long, road_comparator>;
+// Stores kilometers for a given road.
 static road_map road_km;
 
 // VEHICLE MAP
+// Stores kilometers on S and kilometers on A for a given vehicle.
 static std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km;
 
 using line = std::pair<int, std::string>;
+// Stores the corresponding line of input for a given driving vehicle.
 static std::unordered_map<std::string, line> driving_vehicles;
 
 // Important regexes.
@@ -101,7 +104,6 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
             std::stoul(remove_comma(km_match[0]))};
 }
 
-//
 void print_vehicle(const std::string& v) {
     std::pair<unsigned long, unsigned long> km = vehicle_km[v];
     std::cout << v;
@@ -113,7 +115,7 @@ void print_vehicle(const std::string& v) {
     std::cout << std::endl;
 }
 
-void print_road(road r) {
+void print_road(const road& r) {
     if (r.first == A)
 	std::cout << "A";
     else
@@ -133,16 +135,14 @@ void general_request() {
 
 // Handles "?VEHICLE" request.
 void vehicle_request(const std::string& v) {
-    if(vehicle_km.find(v) != vehicle_km.end()) {
+    if(vehicle_km.find(v) != vehicle_km.end())
         print_vehicle(v);
-    }
 }
 
 // Handles "?ROAD" request.
-void road_request(road r) {
-    if(road_km.find(r) != road_km.end()) {
+void road_request(const road& r) {
+    if(road_km.find(r) != road_km.end())
     	print_road(r);
-    }
 }
 
 // Handles requests.
@@ -162,7 +162,7 @@ void print_error(const line& l) {
     std::cerr << "Error in line " << l.first << ": " << l.second;
 }
 
-void increase_road_km(const road r, const unsigned long km) {
+void increase_road_km(const road& r, const unsigned long km) {
     if (road_km.find(r) != road_km.end()) {
         auto km_to_add = road_km[r] + km;
         road_km.at(r) = km_to_add;
@@ -171,7 +171,7 @@ void increase_road_km(const road r, const unsigned long km) {
     }
 }
 
-void increase_vehicle_km(const std::string vehicle, const unsigned long km, const road_type type) {
+void increase_vehicle_km(const std::string& vehicle, const unsigned long km, const road_type type) {
     if (vehicle_km.find(vehicle) == vehicle_km.end()) {
         vehicle_km[vehicle] = std::make_pair(0,0);
     }
@@ -236,7 +236,7 @@ void road_tolls() {
     int line_count = 1;
     std::string str;
 
-    while (std::getline(std::cin, str) {
+    while (std::getline(std::cin, str)) {
         // \n is not stored! So need to append it to get a raw input string.
         str += "\n";
         if (is_correct_line(str))
