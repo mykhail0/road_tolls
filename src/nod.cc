@@ -84,24 +84,34 @@ road str_to_road(const std::string& s) {
     return std::make_pair(t, number);
 }
 
-// Extracts vehicle name, road name (as needed for a key in a road_map)
-// and kilometers.
-std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
+// Extracts kilometers from an input line. (not a request line)
+unsigned long extract_km(const std::string& s) {
+    std::smatch km_match;
+    std::regex_search(s, km_match, std::regex(kilometer));
+    assert(!km_match.empty());
+    return std::stoul(remove_comma(km_match[0]));
+}
+
+// Extracts vehicle name and road name (as needed for a key in a road_map).
+std::pair<std::string, road> extract_vehicle_and_road(const std::string& s) {
     std::smatch vehicle_match;
     std::smatch road_match;
-    std::smatch km_match;
 
-    std::regex_search(s, km_match, std::regex(kilometer));
     std::regex_search(s, vehicle_match, std::regex(vehicle_name));
     std::string tmp = vehicle_match.suffix().str();
     std::regex_search(tmp, road_match, std::regex(road_name));
 
     assert(!vehicle_match.empty());
     assert(!road_match.empty());
-    assert(!km_match.empty());
 
-    return {vehicle_match[0], str_to_road(road_match[0]),
-            std::stoul(remove_comma(km_match[0]))};
+    return std::make_pair(vehicle_match[0], str_to_road(road_match[0]));
+}
+
+// Extracts vehicle name, road name (as needed for a key in a road_map)
+// and kilometers.
+std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
+    auto [v, r] = extract_vehicle_and_road(s);
+    return {v, r, extract_km(s)};
 }
 
 void print_vehicle(const std::string& v) {
@@ -130,7 +140,6 @@ void general_request() {
         
     for (auto e : road_km)
         print_road(e.first);
-
 }
 
 // Handles "?VEHICLE" request.
@@ -172,23 +181,22 @@ void increase_road_km(const road& r, const unsigned long km) {
 }
 
 void increase_vehicle_km(const std::string& vehicle, const unsigned long km, const road_type type) {
-    if (vehicle_km.find(vehicle) == vehicle_km.end()) {
+    if (vehicle_km.find(vehicle) == vehicle_km.end())
         vehicle_km[vehicle] = std::make_pair(0,0);
-    }
+
     auto km_to_add = vehicle_km[vehicle];
     if (type == A) {
-        if (km_to_add.first == 0) {
+        if (km_to_add.first == 0)
             km_to_add.first++;
-        }
+
         km_to_add.first += km;
     } else {
-        if (km_to_add.second == 0) {
+        if (km_to_add.second == 0)
             km_to_add.second++;
-        }
+
         km_to_add.second += km;
     }
     vehicle_km.at(vehicle) = km_to_add;
-    
 }
 
 unsigned long distance(unsigned long km, unsigned long km2) {
