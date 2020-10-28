@@ -114,6 +114,9 @@ std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::str
     return {v, r, extract_km(s)};
 }
 
+//Writes number of kilometers from vehicle_km to standard output
+//in correct syntax.
+//Skips part of text if vehicle didn't drive on some type of road.
 void print_vehicle(const std::string& v) {
     std::pair<unsigned long, unsigned long> km = vehicle_km[v];
     std::cout << v;
@@ -125,6 +128,8 @@ void print_vehicle(const std::string& v) {
     std::cout << std::endl;
 }
 
+//Writes number of kilometers from road_km to standard output
+//in correct syntax.
 void print_road(const road& r) {
     if (r.first == A)
 	std::cout << "A";
@@ -167,10 +172,12 @@ void request(const std::string& s) {
     }
 }
 
+//Writes error line to standard error.
 void print_error(const line& l) {
     std::cerr << "Error in line " << l.first << ": " << l.second;
 }
 
+//Adds km to value stored on road_km
 void increase_road_km(const road& r, const unsigned long km) {
     if (road_km.find(r) != road_km.end()) {
         auto km_to_add = road_km[r] + km;
@@ -180,6 +187,8 @@ void increase_road_km(const road& r, const unsigned long km) {
     }
 }
 
+//Adds km to one of values stored on vehicle_km
+//depending on road type.
 void increase_vehicle_km(const std::string& vehicle, const unsigned long km, const road_type type) {
     if (vehicle_km.find(vehicle) == vehicle_km.end())
         vehicle_km[vehicle] = std::make_pair(0,0);
@@ -199,6 +208,7 @@ void increase_vehicle_km(const std::string& vehicle, const unsigned long km, con
     vehicle_km.at(vehicle) = km_to_add;
 }
 
+//Count distance between km and km2.
 unsigned long distance(unsigned long km, unsigned long km2) {
     return km > km2 ? km - km2 : km2 - km;
 }
