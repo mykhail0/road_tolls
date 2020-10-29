@@ -266,13 +266,6 @@ void road_tolls() {
 
     if (std::cin.bad())
         std::cerr << "Error in the input\n";
-    else if (std::cin.eof()) {
-        if (is_correct_line(str))
-            handle(std::make_pair(line_count, str));
-        else if (!std::cin.fail())
-            std::cerr << "Error in line " << line_count << ": " << str
-                      << std::endl;
-    }
 }
 
 int main() {
