@@ -60,20 +60,20 @@ std::regex road_name_regex() {
     return road_name_reg;
 }
 
-// Checks if an inputted line is a request line.
+// Checks if a given line is a request.
 bool is_request(const std::string& s) {
     static const auto request_line_regex = std::regex(request_line);
     return std::regex_match(s, request_line_regex);
 }
 
-// Checks if an inputted line is correct.
+// Checks if a given line has correct syntax.
 bool is_correct_line(const std::string& s) {
     static const auto correct_line_regex = std::regex(correct_line);
     return std::regex_match(s, correct_line_regex);
 }
 
-// Extracts a road string or a vehicle string from an inputted line.
-// if the request is "?" then returned string is empty.
+// Extracts a road string or a vehicle string from a given line.
+// If the request is "?" then returned string is empty.
 std::string extract_request_data(const std::string& s) {
     static const auto road_or_vehicle_regex = std::regex(road_or_vehicle);
     std::smatch m;
@@ -83,13 +83,14 @@ std::string extract_request_data(const std::string& s) {
     return "";
 }
 
-// Removes the first comma from a string.
+// Removes the first comma from the string.
 std::string remove_comma(const std::string& s) {
     std::string ans = std::string(s);
     return ans.erase(ans.find(','), 1);
 }
 
-// Converts a string to the road type.
+// Converts a string to the road type
+// assuming s is correct.
 road str_to_road(const std::string& s) {
     road_type t;
     int number = std::stoi(s.substr(1));
@@ -109,7 +110,7 @@ unsigned long extract_km(const std::string& s) {
     return std::stoul(remove_comma(km_match[0]));
 }
 
-// Extracts vehicle name and road name (as needed for a key in a road_map).
+// Extracts road name (as needed for a key in a road_map) and vehicle name.
 std::pair<std::string, road> extract_vehicle_and_road(const std::string& s) {
     std::smatch vehicle_match;
     std::smatch road_match;
@@ -124,9 +125,8 @@ std::pair<std::string, road> extract_vehicle_and_road(const std::string& s) {
     return std::make_pair(vehicle_match[0], str_to_road(road_match[0]));
 }
 
-//Writes number of kilometers from vehicle_km to standard output
-//in correct syntax.
-//Skips part of text if vehicle didn't drive on some type of road.
+// Prints kilometers from vehicle_km correctly.
+// Skips part of text if vehicle didn't drive on some type of road.
 void print_vehicle(const std::string& v) {
     std::pair<unsigned long, unsigned long> km = vehicle_km[v];
     std::cout << v;
@@ -184,12 +184,12 @@ void request(const std::string& s) {
     }
 }
 
-//Writes error line to standard error.
+// Prints an error line.
 void print_error(const line& l) {
     std::cerr << "Error in line " << l.first << ": " << l.second;
 }
 
-//Adds km to value stored on road_km
+// Adds km to the value stored in road_km.
 void increase_road_km(const road& r, const unsigned long km) {
     if (road_km.find(r) != road_km.end()) {
         auto km_to_add = road_km[r] + km;
@@ -199,8 +199,8 @@ void increase_road_km(const road& r, const unsigned long km) {
     }
 }
 
-//Adds km to one of values stored on vehicle_km
-//depending on road type.
+// Adds km to one of the values stored in vehicle_km
+// depending on the road type.
 void increase_vehicle_km(const std::string& vehicle, const unsigned long km,
                          const road_type type) {
     if (vehicle_km.find(vehicle) == vehicle_km.end())
@@ -221,14 +221,14 @@ void increase_vehicle_km(const std::string& vehicle, const unsigned long km,
     vehicle_km.at(vehicle) = km_to_add;
 }
 
-//Count distance between km and km2.
+// Computes the distance between km and km2.
 unsigned long distance(unsigned long km, unsigned long km2) {
     return km > km2 ? km - km2 : km2 - km;
 }
 
-// Inserts vehicle info into vehicle maps, prints error if needed.
+// Inserts vehicle data into vehicle maps, prints error if needed.
 // Updates road_km.
-// line l has correct syntax.
+// Line l has correct syntax.
 void insert(const line& l) {
     auto [v, r] = extract_vehicle_and_road(l.second);
     if (driving_vehicles.find(v) != driving_vehicles.end()) {
@@ -261,9 +261,9 @@ void handle(const line& l) {
         insert(l);
 }
 
-// Gets line and tries to extract 1) request or 2) vehicle information.
-// Calls error handler if fails.
-// If succeeds, passes extracted information to the engine.
+// Gets a line and if it's correct, passes it to the engine.
+// Prints error if it's incorrect.
+// Does it untill EOF.
 void road_tolls() {
     int line_count = 1;
     std::string str;
