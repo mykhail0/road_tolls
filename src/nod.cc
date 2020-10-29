@@ -32,7 +32,7 @@ static std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km
 using line = std::pair<int, std::string>;
 using driving_vehicle_data = std::pair<line, road>;
 // Stores the corresponding line of input for a given driving vehicle.
-// Also stores the road which a given vehicle is on.
+// Also stores the road which a given vehicle is on for optimization purpose.
 static std::unordered_map<std::string, driving_vehicle_data> driving_vehicles;
 
 // Important regex strings.
@@ -50,21 +50,34 @@ static const std::string request_line = white_space + "*\\?" + white_space
 static const std::string correct_line = "(" + vehicle_line + "|"
                                         + request_line + ")|\\n";
 
+std::regex vehicle_name_regex() {
+    static const auto vehicle_name_reg = std::regex(vehicle_name);
+    return vehicle_name_reg;
+}
+
+std::regex road_name_regex() {
+    static const std::regex road_name_reg = std::regex(road_name);
+    return road_name_reg;
+}
+
 // Checks if an inputted line is a request line.
 bool is_request(const std::string& s) {
-    return std::regex_match(s, std::regex(request_line));
+    static const auto request_line_regex = std::regex(request_line);
+    return std::regex_match(s, request_line_regex);
 }
 
 // Checks if an inputted line is correct.
 bool is_correct_line(const std::string& s) {
-    return std::regex_match(s, std::regex(correct_line));
+    static const auto correct_line_regex = std::regex(correct_line);
+    return std::regex_match(s, correct_line_regex);
 }
 
 // Extracts a road string or a vehicle string from an inputted line.
 // if the request is "?" then returned string is empty.
 std::string extract_request_data(const std::string& s) {
+    static const auto road_or_vehicle_regex = std::regex(road_or_vehicle);
     std::smatch m;
-    std::regex_search(s, m, std::regex(road_or_vehicle));
+    std::regex_search(s, m, road_or_vehicle_regex);
     if (!m.empty())
         return m[0];
     return "";
@@ -89,8 +102,9 @@ road str_to_road(const std::string& s) {
 
 // Extracts kilometers from an input line. (not a request line)
 unsigned long extract_km(const std::string& s) {
+    static const auto kilometer_regex = std::regex(kilometer);
     std::smatch km_match;
-    std::regex_search(s, km_match, std::regex(kilometer));
+    std::regex_search(s, km_match, kilometer_regex);
     assert(!km_match.empty());
     return std::stoul(remove_comma(km_match[0]));
 }
@@ -100,9 +114,9 @@ std::pair<std::string, road> extract_vehicle_and_road(const std::string& s) {
     std::smatch vehicle_match;
     std::smatch road_match;
 
-    std::regex_search(s, vehicle_match, std::regex(vehicle_name));
+    std::regex_search(s, vehicle_match, vehicle_name_regex());
     std::string tmp = vehicle_match.suffix().str();
-    std::regex_search(tmp, road_match, std::regex(road_name));
+    std::regex_search(tmp, road_match, road_name_regex());
 
     assert(!vehicle_match.empty());
     assert(!road_match.empty());
@@ -127,7 +141,8 @@ void print_vehicle(const std::string& v) {
         std::cout << " A " << (km.first - 1) / 10 << "," << (km.first - 1) % 10;
 
     if (km.second != 0)
-        std::cout << " S " << (km.second - 1) / 10 << "," << (km.second - 1) % 10;
+        std::cout << " S " << (km.second - 1) / 10 << ","
+                  << (km.second - 1) % 10;
     std::cout << std::endl;
 }
 
@@ -138,7 +153,8 @@ void print_road(const road& r) {
 	std::cout << "A";
     else
 	std::cout << "S";
-    std::cout << r.second << " " << road_km[r] / 10 << "," << road_km[r] % 10 << std::endl;
+    std::cout << r.second << " " << road_km[r] / 10 << "," << road_km[r] % 10
+              << std::endl;
 }
 
 // Handles "?" request.
@@ -168,9 +184,9 @@ void request(const std::string& s) {
     if (vehicle_or_road.empty()) {
         general_request();
     } else {
-        if (std::regex_match(vehicle_or_road, std::regex(vehicle_name)))
+        if (std::regex_match(vehicle_or_road, vehicle_name_regex()))
             vehicle_request(vehicle_or_road);
-        if (std::regex_match(vehicle_or_road, std::regex(road_name)))
+        if (std::regex_match(vehicle_or_road, road_name_regex()))
             road_request(str_to_road(vehicle_or_road));
     }
 }
@@ -192,7 +208,8 @@ void increase_road_km(const road& r, const unsigned long km) {
 
 //Adds km to one of values stored on vehicle_km
 //depending on road type.
-void increase_vehicle_km(const std::string& vehicle, const unsigned long km, const road_type type) {
+void increase_vehicle_km(const std::string& vehicle, const unsigned long km,
+                         const road_type type) {
     if (vehicle_km.find(vehicle) == vehicle_km.end())
         vehicle_km[vehicle] = std::make_pair(0,0);
 
@@ -244,6 +261,7 @@ void insert(const line& l) {
 void handle(const line& l) {
     if (l.second.compare("\n") == 0)
         return;
+
     if (is_request(l.second))
         request(l.second);
     else
