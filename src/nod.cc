@@ -30,8 +30,10 @@ static road_map road_km;
 static std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km;
 
 using line = std::pair<int, std::string>;
+using driving_vehicle_data = std::pair<line, road>;
 // Stores the corresponding line of input for a given driving vehicle.
-static std::unordered_map<std::string, line> driving_vehicles;
+// Also stores the road which a given vehicle is on.
+static std::unordered_map<std::string, driving_vehicle_data> driving_vehicles;
 
 // Important regex strings.
 static const std::string white_space = R"([ \t\r\v\f])";
@@ -214,15 +216,13 @@ unsigned long distance(unsigned long km, unsigned long km2) {
     return km > km2 ? km - km2 : km2 - km;
 }
 
-// Inserts vehicle info into vehicle maps, prints error if neede.
+// Inserts vehicle info into vehicle maps, prints error if needed.
 // Updates road_km.
 // line l has correct syntax.
 void insert(const line& l) {
     auto [v, r] = extract_vehicle_and_road(l.second);
     if (driving_vehicles.find(v) != driving_vehicles.end()) {
-        auto l2 = driving_vehicles[v];
-        auto [v2, r2] = extract_vehicle_and_road(l2.second);
-        assert(v == v2);
+        auto [l2, r2] = driving_vehicles[v];
         if (r == r2) {
             auto km = extract_km(l.second);
             auto km2 = extract_km(l2.second);
@@ -231,12 +231,12 @@ void insert(const line& l) {
             driving_vehicles.erase(v);
 
         } else {
-            print_error(driving_vehicles[v]);
-            driving_vehicles.at(v) = l;
+            print_error(driving_vehicles[v].first);
+            driving_vehicles.at(v) = std::make_pair(l, r);
         }
 
     } else {
-        driving_vehicles[v] = l;
+        driving_vehicles[v] = std::make_pair(l, r);
     }
 }
 
