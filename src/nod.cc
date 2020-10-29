@@ -33,19 +33,20 @@ using line = std::pair<int, std::string>;
 // Stores the corresponding line of input for a given driving vehicle.
 static std::unordered_map<std::string, line> driving_vehicles;
 
-// Important regexes.
-static std::string white_space = R"([ \t\r\v\f])";
-static std::string road_name = "[AS][1-9]\\d{0,2}";
-static std::string vehicle_name = "[[:alnum:]]{3,11}";
-static std::string kilometer = "([1-9]\\d*|0),\\d";
-static std::string vehicle_line = white_space + "*" + vehicle_name + white_space
-                                  + "+" + road_name + white_space + "+" +
-                                  kilometer + "\\s*";
-static std::string road_or_vehicle = "(" + vehicle_name + "|" + road_name + ")";
-static std::string request_line = white_space + "*\\?" + white_space + "*" +
-                                  road_or_vehicle + "?\\s*";
-static std::string correct_line = "(" + vehicle_line + "|" + request_line
-                                  + ")|\\n";
+// Important regex strings.
+static const std::string white_space = R"([ \t\r\v\f])";
+static const std::string road_name = "[AS][1-9]\\d{0,2}";
+static const std::string vehicle_name = "[[:alnum:]]{3,11}";
+static const std::string kilometer = "([1-9]\\d*|0),\\d";
+static const std::string vehicle_line = white_space + "*" + vehicle_name +
+                                        white_space + "+" + road_name +
+                                        white_space + "+" + kilometer + "\\s*";
+static const std::string road_or_vehicle = "(" + vehicle_name + "|"
+                                           + road_name + ")";
+static const std::string request_line = white_space + "*\\?" + white_space
+                                        + "*" + road_or_vehicle + "?\\s*";
+static const std::string correct_line = "(" + vehicle_line + "|"
+                                        + request_line + ")|\\n";
 
 // Checks if an inputted line is a request line.
 bool is_request(const std::string& s) {
