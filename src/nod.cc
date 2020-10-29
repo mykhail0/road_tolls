@@ -124,13 +124,6 @@ std::pair<std::string, road> extract_vehicle_and_road(const std::string& s) {
     return std::make_pair(vehicle_match[0], str_to_road(road_match[0]));
 }
 
-// Extracts vehicle name, road name (as needed for a key in a road_map)
-// and kilometers.
-std::tuple<std::string, road, unsigned long> extract_vehicle_data(const std::string& s) {
-    auto [v, r] = extract_vehicle_and_road(s);
-    return {v, r, extract_km(s)};
-}
-
 //Writes number of kilometers from vehicle_km to standard output
 //in correct syntax.
 //Skips part of text if vehicle didn't drive on some type of road.
