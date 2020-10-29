@@ -217,12 +217,14 @@ unsigned long distance(unsigned long km, unsigned long km2) {
 // Updates road_km.
 // line l has correct syntax.
 void insert(const line& l) {
-    auto [v, r, km] = extract_vehicle_data(l.second);
+    auto [v, r] = extract_vehicle_and_road(l.second);
     if (driving_vehicles.find(v) != driving_vehicles.end()) {
         auto l2 = driving_vehicles[v];
-        auto [v2, r2, km2] = extract_vehicle_data(l2.second);
+        auto [v2, r2] = extract_vehicle_and_road(l2.second);
         assert(v == v2);
         if (r == r2) {
+            auto km = extract_km(l.second);
+            auto km2 = extract_km(l2.second);
             increase_road_km(r, distance(km, km2));
             increase_vehicle_km(v, distance(km, km2), r.first);
             driving_vehicles.erase(v);
