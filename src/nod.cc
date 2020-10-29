@@ -30,8 +30,10 @@ static road_map road_km;
 static std::map<std::string, std::pair<unsigned long, unsigned long>> vehicle_km;
 
 using line = std::pair<int, std::string>;
+using driving_vehicle_data = std::pair<line, road>;
 // Stores the corresponding line of input for a given driving vehicle.
-static std::unordered_map<std::string, line> driving_vehicles;
+// Also stores the road which a given vehicle is on.
+static std::unordered_map<std::string, driving_vehicle_data> driving_vehicles;
 
 // Important regexes.
 static std::string white_space = R"([ \t\r\v\f])";
@@ -213,7 +215,7 @@ unsigned long distance(unsigned long km, unsigned long km2) {
     return km > km2 ? km - km2 : km2 - km;
 }
 
-// Inserts vehicle info into vehicle maps, prints error if neede.
+// Inserts vehicle info into vehicle maps, prints error if needed.
 // Updates road_km.
 // line l has correct syntax.
 void insert(const line& l) {
