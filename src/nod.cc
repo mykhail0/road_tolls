@@ -139,8 +139,8 @@ void print_vehicle(const std::string& v) {
     std::cout << std::endl;
 }
 
-//Writes number of kilometers from road_km to standard output
-//in correct syntax.
+// Writes number of kilometers from road_km to standard output
+// in correct syntax.
 void print_road(const road& r) {
     if (r.first == A)
 	std::cout << "A";
@@ -161,13 +161,13 @@ void general_request() {
 
 // Handles "?VEHICLE" request.
 void vehicle_request(const std::string& v) {
-    if(vehicle_km.find(v) != vehicle_km.end())
+    if (vehicle_km.find(v) != vehicle_km.end())
         print_vehicle(v);
 }
 
 // Handles "?ROAD" request.
 void road_request(const road& r) {
-    if(road_km.find(r) != road_km.end())
+    if (road_km.find(r) != road_km.end())
     	print_road(r);
 }
 
