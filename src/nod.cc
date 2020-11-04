@@ -234,17 +234,32 @@ void insert(const line& l) {
     if (driving_vehicles.find(v) != driving_vehicles.end()) {
         auto [l2, r2] = driving_vehicles[v];
         if (r == r2) {
-            auto km = extract_km(l.second);
-            auto km2 = extract_km(l2.second);
-            increase_road_km(r, distance(km, km2));
-            increase_vehicle_km(v, distance(km, km2), r.first);
-            driving_vehicles.erase(v);
+            unsigned long km2, km;
 
+            bool exception_thrown = false;
+            try {
+                km2 = extract_km(l2.second);
+            } catch (std::out_of_range& e) {
+                print_error(l2);
+                exception_thrown = true;
+            }
+
+            if (exception_thrown) {
+                driving_vehicles[v] = std::make_pair(l, r);
+            } else {
+                try {
+                    km = extract_km(l.second);
+                    increase_road_km(r, distance(km, km2));
+                    increase_vehicle_km(v, distance(km, km2), r.first);
+                    driving_vehicles.erase(v);
+                } catch (std::out_of_range& e) {
+                    print_error(l);
+                }
+            }
         } else {
             print_error(driving_vehicles[v].first);
             driving_vehicles.at(v) = std::make_pair(l, r);
         }
-
     } else {
         driving_vehicles[v] = std::make_pair(l, r);
     }
